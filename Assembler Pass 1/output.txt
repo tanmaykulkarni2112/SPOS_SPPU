@@ -1,0 +1,21 @@
+AD,01 C,100
+IS,XX RG,01 S,05
+IS,04 RG,02 S,10
+LABEL S,up IS,05 S,a L,='5'
+AD,03 S,up
+AD,05
+IS,05 S,b L,='7'
+DL,01 S,a C,02
+DL,02 S,b C,10
+AD,02
+
+Symbol Table:
+05	100
+10	101
+up	102
+a	104
+b	106
+
+Literal Table:
+='5'	102
+='7'	107
