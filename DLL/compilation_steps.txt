@@ -1,0 +1,5 @@
+javac -h . -cp . B1.java
+gcc -shared -fPIC -I/<include-folders-path> -I/<include-folders-path>/linux B1.c -o libB1.so
+java -cp . -Djava.library.path=. B1
+
+<include-folders-path> can be found in others locations -> jvm -> working java version -> include
