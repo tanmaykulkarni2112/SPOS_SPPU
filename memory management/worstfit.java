@@ -1,78 +1,72 @@
 import java.util.Scanner;
 
-public class worstfit {
-    static void worstFit(int blockSize[], int m, int processSize[], int n, int remblockSize[]) {
-        int allocation[] = new int[n]; // Array to store block allocation
-
-        // Initialize allocation array
-        for (int i = 0; i < allocation.length; i++) {
-            allocation[i] = -1;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Get number of memory blocks
+        System.out.println("Enter the number of blocks");
+        int blockSize = sc.nextInt();
+        
+        // Get block sizes from user
+        int[] block = new int[blockSize];
+        System.out.println("Enter the size of each block:");
+        for(int i = 0; i < blockSize; i++) {
+            System.out.print("Block " + (i + 1) + ": ");
+            block[i] = sc.nextInt();
         }
 
-        // Allocate blocks to processes using worst fit
-        for (int i = 0; i < n; i++) {
+        // Get number of processes
+        System.out.println("Enter the number of processes");
+        int processCount = sc.nextInt();
+        
+        // Get process sizes from user
+        int[] process = new int[processCount];
+        System.out.println("Enter the size of each process:");
+        for(int i = 0; i < processCount; i++) {
+            System.out.print("Process " + (i + 1) + ": ");
+            process[i] = sc.nextInt();
+        }
+
+        // Array to track allocated blocks
+        int[] flag = new int[blockSize];
+        for(int i = 0; i < blockSize; i++) {
+            flag[i] = -1;
+        }
+        
+        int[] output = new int[processCount];
+        for(int i = 0; i < processCount; i++) {
+            output[i] = -1;  // Initialize to -1 indicating unallocated
+        }
+
+        // Worst-Fit Allocation
+        for(int m = 0; m < processCount; m++) {
             int worstIdx = -1;
-            // Find the block with the largest size that can accommodate the process
-            for (int j = 0; j < m; j++) {
-                if (blockSize[j] >= processSize[i]) {
-                    if (worstIdx == -1 || blockSize[j] > blockSize[worstIdx]) {
-                        worstIdx = j;
+            for(int n = 0; n < blockSize; n++) {
+                // Find the largest suitable block for the process
+                if(process[m] <= block[n] && flag[n] == -1) {
+                    if(worstIdx == -1 || block[worstIdx] < block[n]) {
+                        worstIdx = n;
                     }
                 }
             }
-            
-            // If a suitable block is found, allocate it to the process
-            if (worstIdx != -1) {
-                allocation[i] = worstIdx;
-                blockSize[worstIdx] -= processSize[i]; // Update block size
-                remblockSize[i] = blockSize[worstIdx]; // Store remaining block size
+            if(worstIdx != -1) {
+                output[m] = worstIdx;  // Assign block index to process
+                flag[worstIdx] = 1;    // Mark block as allocated
             }
         }
 
-        // Output the result
-        System.out.println("\nProcess No.\tProcess Size\tBlock No.\tRemaining Block Size");
-        for (int i = 0; i < n; i++) {
-            System.out.print(" " + (i + 1) + "\t\t" + processSize[i] + "\t\t");
-            if (allocation[i] != -1) {
-                System.out.print((allocation[i] + 1) + "\t\t" + remblockSize[i]);
+        // Display results
+        System.out.println("\nProcess No.\tProcess Size\tBlock No.");
+        for(int i = 0; i < processCount; i++) {
+            System.out.print(" " + (i + 1) + "\t\t" + process[i] + "\t\t");
+            if(output[i] != -1) {
+                System.out.println((output[i] + 1));
             } else {
-                System.out.print("Not Allocated" + "\t\t" + remblockSize[i]);
+                System.out.println("Not Allocated");
             }
-            System.out.println();
-        }
-    }
-
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-
-        // Get the number of blocks from the user
-        System.out.print("Enter the number of blocks: ");
-        int m = in.nextInt();
-
-        int blockSize[] = new int[m];  // Array to store block sizes
-        int remblockSize[] = new int[m]; // Array to store remaining block sizes
-
-        // Input block sizes
-        for (int i = 0; i < m; i++) {
-            System.out.print("Enter size of block " + (i + 1) + ": ");
-            blockSize[i] = in.nextInt();
         }
 
-        // Get the number of processes from the user
-        System.out.print("Enter the number of processes: ");
-        int n = in.nextInt();
-
-        int processSize[] = new int[n]; // Array to store process sizes
-
-        // Input process sizes
-        for (int i = 0; i < n; i++) {
-            System.out.print("Enter size of process " + (i + 1) + ": ");
-            processSize[i] = in.nextInt();
-        }
-
-        // Call the worstFit function
-        worstFit(blockSize, m, processSize, n, remblockSize);
-
-        in.close();
+        sc.close();
     }
 }
